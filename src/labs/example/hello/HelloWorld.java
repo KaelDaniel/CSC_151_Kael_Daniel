@@ -1,3 +1,4 @@
+package labs.example.hello;
 /*
 @Author: Kael Daniel
 @Date: 1/21/2026
