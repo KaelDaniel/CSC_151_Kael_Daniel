@@ -54,4 +54,6 @@ public class Physics {
     public void logValidAngleInfo(double degrees){
         System.out.println("logging the angle" + degrees + "degrees. This is a valid 3-4-5 right triangle.");
     };
+
+    
 }
