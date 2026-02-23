@@ -55,5 +55,16 @@ public class Physics {
         System.out.println("logging the angle" + degrees + "degrees. This is a valid 3-4-5 right triangle.");
     };
 
-    
+    public double getLightSpeedinMPH(){
+        double lightSpeed = 186282;
+        double lightSpeedMPH = lightSpeed * 3600;
+        return lightSpeedMPH;
+    }
+
+    public double getTimeFromSunToEarthInHours(){
+        double lightSpeedMPH = getLightSpeedinMPH();
+        double distanceSunToEarth = 92955807.3;
+        double time = distanceSunToEarth / lightSpeedMPH;
+        return time;
+    }
 }
