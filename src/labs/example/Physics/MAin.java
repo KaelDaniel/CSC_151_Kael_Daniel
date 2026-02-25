@@ -2,6 +2,7 @@ package labs.example.Physics;
 
 import java.lang.Math;
 
+@SuppressWarnings("unused") //meant to fix a weird conflict
 public class MAin {
     public static void main(String[] args) throws Exception{
         Physics maths = new Physics();
