@@ -14,14 +14,17 @@ public class arrayOperations {
             
             arrayLength[count] = yeetScanner.nextInt();
         }
-        
-        System.out.println("I created a new array and it now has "+x1+" items in it");
+        displayArray(arrayLength);
+    }
+    
+    private void displayArray(int[] arrayLength){
+        System.out.println("I created a new array and it now has " + arrayLength.length + " items in it");
         
         System.out.println("The array items and their values are listed below:");
         
         for (int yeet = 0; yeet < arrayLength.length; yeet++) {
-            System.out.println( yeet + ": " + arrayLength[yeet]);
+            System.out.println(yeet + ": " + arrayLength[yeet]);
         }
-    };
-    
+    }
+
 }
