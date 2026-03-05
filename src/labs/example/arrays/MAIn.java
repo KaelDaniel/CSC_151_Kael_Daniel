@@ -12,5 +12,13 @@ public class MAIn {
         int input = scanner.nextInt();
 
         arrays.createNewArray(input);
+
+        int[] sortedArrays = new int[50];
+
+        for (int num = 0; num < sortedArrays.length; num++) {
+            sortedArrays[num] = (int)(Math.random() * 100);
+        }
+
+        arrayOperations.sortArray(sortedArrays);
     }
 }
