@@ -20,5 +20,7 @@ public class MAIn {
         }
 
         arrayOperations.sortArray(sortedArrays);
+
+        arrayOperations.getDaysAndMonths();
     }
 }
