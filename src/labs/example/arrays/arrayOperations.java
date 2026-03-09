@@ -4,17 +4,17 @@ import java.util.Scanner;
 
 public class arrayOperations {
     
-    public void createNewArray(int x1){
-        int[] arrayLength = new int[x1];
-        for (int count = 0;count < arrayLength.length; count++){
+    public void createNewArray(int x1){ //creates the first class with a intiger input
+        int[] arrayLength = new int[x1]; //creates the first array with its lenght/slots being equal to the inputted amount
+        for (int count = 0;count < arrayLength.length; count++){ //for the length of the array the use will be able to input a value into each slot
 
             System.out.println("assign a number to array number "+count+":");
             
-            Scanner yeetScanner = new Scanner(System.in);
+            Scanner yeetScanner = new Scanner(System.in); //this is used to check for input
             
-            arrayLength[count] = yeetScanner.nextInt();
+            arrayLength[count] = yeetScanner.nextInt(); //sets the slot of the loop count to the inputed number
         }
-        displayArray(arrayLength);
+        displayArray(arrayLength); //a private class meant to be called at the end that has text about how long the array is and what each slot is
     }
     
     private void displayArray(int[] arrayLength){
@@ -22,15 +22,15 @@ public class arrayOperations {
         
         System.out.println("The array items and their values are listed below:");
         
-        for (int yeet = 0; yeet < arrayLength.length; yeet++) {
+        for (int yeet = 0; yeet < arrayLength.length; yeet++) { //this just repeats the slot number, and the given int
             System.out.println(yeet + ": " + arrayLength[yeet]);
         }
     }
 
     public static void sortArray(int[] arr){
-        for (int count = 0; count < arr.length - 1; count++) {
+        for (int count = 0; count < arr.length - 1; count++) { //bubble orginaizing system, really weird
             
-            for (int i = 0; i < arr.length - 1 - count; i++) {
+            for (int i = 0; i < arr.length - 1 - count; i++) { //pretty much it goes through each slot and compares it to the next slot, and switches them if needed, and makes sure to not take to long for them
                 
                 if (arr[i] > arr[i + 1]) {
                     
@@ -42,13 +42,13 @@ public class arrayOperations {
             
             }
         }
-        for (int num : arr) {
+        for (int num : arr) { //prints the orginised array
             System.out.println(num);
         }
     }
 
     public static void getDaysAndMonths(){
-        int[] daysInmonth = new int[12];
+        int[] daysInmonth = new int[12]; //creates an array with twelve slots that have the dates of each month in order
         daysInmonth[0] = 31; 
         daysInmonth[1] = 28; 
         daysInmonth[2] = 31; 
@@ -62,7 +62,7 @@ public class arrayOperations {
         daysInmonth[10] = 30; 
         daysInmonth[11] = 31; 
 
-        String[] months = new String[12];
+        String[] months = new String[12]; //creates an array that holds the name of each month in order
         months[0] = "January";
         months[1] = "February";
         months[2] = "March";
@@ -77,7 +77,7 @@ public class arrayOperations {
         months[11] = "December";
 
         System.out.println("Days in each month:");
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 12; i++) { //prints out each month with its correct number of days in order
             System.out.println(months[i] + ": " + daysInmonth[i]+" days");
         }
     };
