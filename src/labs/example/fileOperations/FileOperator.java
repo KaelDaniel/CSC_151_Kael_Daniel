@@ -17,6 +17,8 @@ public class FileOperator {
 
     private static void open_CSV_File(){
         File csv_file = new File(File_Name);
+        File csv_error = new File(Error_Logger_File);
+
         
     }
 }
