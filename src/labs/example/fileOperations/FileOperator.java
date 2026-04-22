@@ -13,7 +13,7 @@ public class FileOperator {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
         open_CSV_File();
-
+        display_Error_Logs();
 
     }
 
@@ -47,10 +47,13 @@ public class FileOperator {
         try (BufferedReader reader = new BufferedReader(new FileReader(csv_error))){
             String error_line;
             while ((error_line = reader.readLine()) != null){
-                String[] Dates = error_line.split(" [");
+                String[] error_reports = error_line.split(" [" + "] " + " - ");
 
-
-                System.out.println(Dates);
+                String dates = error_reports[0]
+                String time = error_reports[1]
+                String type = error_reports[2]
+                String serial = error_reports[3]
+                String info = error_reports[4]
             }
         }
 
