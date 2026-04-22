@@ -49,11 +49,11 @@ public class FileOperator {
             while ((error_line = reader.readLine()) != null){
                 String[] error_reports = error_line.split(" [" + "] " + " - ");
 
-                String dates = error_reports[0]
-                String time = error_reports[1]
-                String type = error_reports[2]
-                String serial = error_reports[3]
-                String info = error_reports[4]
+                String dates = error_reports[0];
+                String time = error_reports[1];
+                String type = error_reports[2];
+                String serial = error_reports[3];
+                String info = error_reports[4];
             }
         }
 
