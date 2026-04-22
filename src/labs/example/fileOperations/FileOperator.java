@@ -15,28 +15,26 @@ public class FileOperator {
         open_CSV_File();
     }
 
-//    private static void open_CSV_File() throws FileNotFoundException, IOException{
-//        File csv_file = new File(File_Name);
-//        File csv_error = new File(Error_Logger_File);
-//        try (BufferedReader reader = new BufferedReader(new FileReader(csv_file))){;
-//        String line;
-//        while ((line = reader.readLine()) != null ) {
-//            String[] values = line.split(",");
-//
-//            String name = values[0];
-//            int math = Integer.parseInt(values[1]);
-//            int sci = Integer.parseInt(values[2]);
-//            int ela = Integer.parseInt(values[3]);
-//            float average = (math+sci+ela)/3;
-//            System.out.println(name+": "+(average));
-//            
-//        }
-//        }
-//    }
+    private static void open_CSV_File() throws FileNotFoundException, IOException{
+        File csv_file = new File(File_Name);
+        File csv_error = new File(Error_Logger_File);
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(csv_file))){
+        String line;
+        reader.readLine();
+            while ((line = reader.readLine() ) != null) {
+                    
+                String[] values = line.split(",");
+
+                String name = values[0];
+                int math = Integer.parseInt(values[1]);
+                int sci = Integer.parseInt(values[2]);
+                int ela = Integer.parseInt(values[3]);
+                float average = (math+sci+ela)/3;
+                System.out.println(name+": "+(average));
 
 
-
-
-
-
+            }
+        }
+    }
 }
