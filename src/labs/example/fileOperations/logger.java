@@ -14,6 +14,9 @@ public class logger {
         try (BufferedReader file1 = openErrorLog()) { // creates a buffered 
             getCountOfErrorTypes(file1);
         }
+        try (BufferedReader file2 = openErrorLog()) {
+            getMemoryLimitExceededCount(file2);
+        }
     }
 
     public static BufferedReader openErrorLog() throws FileNotFoundException, IOException{
@@ -52,9 +55,29 @@ public class logger {
         System.out.println("[ERROR]: " + error_Counter); //prints out the final count
         System.out.println("[WARN]: " + warn_Counter);
         System.out.println("[INFO]: " + info_Counter);
+        reader.close(); // closes the BufferedReader
     }
 
-//    public static void getMemoryLimitExceededCount(file2){}
+    public static void getMemoryLimitExceededCount(BufferedReader file2){
+        int memory_Limit = 0; // sets up a counter for the number of times the memory limit was exceeded
+        String error_Line;
+        try {
+            while ((error_Line = file2.readLine()) != null) { // reads each line of the error log file until reaching the end
+
+                if (error_Line.contains("Memory limit exceeded")) { // checks if the line contains "Memory limit exceeded"
+
+                    memory_Limit++; // adds a count for every time the memory limit was exceeded
+                }
+            }
+
+            System.out.println("Memory Limit Exceeded Count: " + memory_Limit); // prints out the final count
+
+            file2.close(); // closes the BufferedReader
+        } 
+        catch (IOException e) {
+            e.printStackTrace(); // prints the stack trace if an IOException occurs
+        }
+    }
     
 //    private static void getDiskSpaceErrorsWithIPAddress(){}
 }
