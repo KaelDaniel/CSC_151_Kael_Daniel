@@ -11,45 +11,45 @@ public class logger {
     private static final String Error_Logger_File = File_Path + "logs\\csv_error.log";
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        try (BufferedReader file1 = openErrorLog()) {
+        try (BufferedReader file1 = openErrorLog()) { // creates a buffered 
             getCountOfErrorTypes(file1);
         }
     }
 
     public static BufferedReader openErrorLog() throws FileNotFoundException, IOException{
         File csv_error = new File(Error_Logger_File); // creates a new file object with the path to the error log file
-        return new BufferedReader(new FileReader(csv_error));
+        return new BufferedReader(new FileReader(csv_error)); //returns a buffered reader object that reads from the error log file
     }
 
     public static void getCountOfErrorTypes(BufferedReader reader) throws IOException {
-        List<String> logLevels = new ArrayList<>();
+        List<String> logLevels = new ArrayList<>(); // creates a new list to store the log levels found in the error log file
         String error_Line;
-        while ((error_Line = reader.readLine()) != null) {
+        while ((error_Line = reader.readLine()) != null) { // reads each line of the error log file until reaching the end
             String[] error_count = error_Line.split(" ");
-            if (error_count.length > 2) {
-                logLevels.add(error_count[2]);
+            if (error_count.length > 2) { // checks if the line has at least 3 splits
+                logLevels.add(error_count[2]); // adds the 3rd section to the array list, which would be the error types
             }
         }
-        // Count the occurrences of each log level
+        // sets up the counters for error, warn, and info
         int error_Counter = 0;
         int warn_Counter = 0;
         int info_Counter = 0;
 
         for (String level : logLevels) {
             if (level.equals("[ERROR]")) {
-                error_Counter++;
+                error_Counter++; //adds a count for every error
 
             } 
             else if (level.equals("[WARN]")) {
-                warn_Counter++;
+                warn_Counter++; //adds a count for every warning
             } 
             else if (level.equals("[INFO]")) {
-                info_Counter++;
+                info_Counter++; //adds a count for every info
 
             }
         }
 
-        System.out.println("[ERROR]: " + error_Counter);
+        System.out.println("[ERROR]: " + error_Counter); //prints out the final count
         System.out.println("[WARN]: " + warn_Counter);
         System.out.println("[INFO]: " + info_Counter);
     }
