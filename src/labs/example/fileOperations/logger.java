@@ -6,16 +6,25 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class logger {
+    // Utility function to close a BufferedReader safely
+    public static void closeFile(BufferedReader reader) {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private static final String File_Path = "T:\\CSC_151_Kael_Daniel\\src\\labs\\example\\fileOperations\\";
     private static final String Error_Logger_File = File_Path + "logs\\csv_error.log";
+    private static final String Api_Logger_File = File_Path + "logs\\api_error.log";
+    private static final String Http_Logger_File = File_Path + "logs\\http_access.log";
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        try (BufferedReader file1 = openErrorLog()) { // creates a buffered 
-            getCountOfErrorTypes(file1);
-        }
-        try (BufferedReader file2 = openErrorLog()) {
-            getMemoryLimitExceededCount(file2);
+        try (BufferedReader file3 = openErrorlogs()) {
+            getDiskSpaceErrorsWithIPAddress(file3);
         }
     }
 
@@ -79,5 +88,37 @@ public class logger {
         }
     }
     
-//    private static void getDiskSpaceErrorsWithIPAddress(){}
+    public static BufferedReader openErrorlogs() throws FileNotFoundException, IOException{
+        File Api_Error = new File(Api_Logger_File);
+        return new BufferedReader(new FileReader(Api_Error));
+    };
+
+    public static BufferedReader openHttpLog() throws FileNotFoundException, IOException{
+        File Http_Error = new File(Http_Logger_File);
+        return new BufferedReader(new FileReader(Http_Error));
+    }
+
+    private static void getDiskSpaceErrorsWithIPAddress(BufferedReader file3){
+        String error_Line;
+        int lineNumber = 0;
+        boolean foundError = false; // Flag to check if any error is found
+        try {
+            while ((error_Line = file3.readLine()) != null) {
+                if (error_Line.contains("Disk space")) {
+                    String[] parts = error_Line.split("-");
+                    if (parts.length >= 2) {
+                        String ipAddress = parts[1].trim();
+                        System.out.println("disk space error on line " + lineNumber + " for IP Address: " + ipAddress);
+                        foundError = true; // Set flag to true if an error is found
+                    }    
+                }
+                lineNumber++;
+            }
+            if (!foundError) { // Print message if no errors were found
+                System.out.println("No disk space errors found.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
