@@ -23,8 +23,8 @@ public class logger {
     private static final String Http_Logger_File = File_Path + "logs\\http_access.log";
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        try (BufferedReader file3 = openErrorlogs()) {
-            getDiskSpaceErrorsWithIPAddress(file3);
+        try (BufferedReader file4 = openHttpLog()) {
+            openErrorLog(file4);
         }
     }
 
@@ -100,15 +100,16 @@ public class logger {
 
     private static void getDiskSpaceErrorsWithIPAddress(BufferedReader file3){
         String error_Line;
-        int lineNumber = 0;
+        int lineNumber = 0; // 
         boolean foundError = false; // Flag to check if any error is found
         try {
             while ((error_Line = file3.readLine()) != null) {
                 if (error_Line.contains("Disk space")) {
                     String[] parts = error_Line.split("-");
                     if (parts.length >= 2) {
-                        String ipAddress = parts[1].trim();
-                        System.out.println("disk space error on line " + lineNumber + " for IP Address: " + ipAddress);
+                        String ipAddress = parts[2].trim();
+                        String[] secondSplit = ipAddress.split(" ");
+                        System.out.println("disk space error on line " + lineNumber + " for IP Address: " + secondSplit[3]);
                         foundError = true; // Set flag to true if an error is found
                     }    
                 }
@@ -121,4 +122,19 @@ public class logger {
             e.printStackTrace();
         }
     }
+
+    private static BufferedReader openErrorLog(BufferedReader HTTP_Access) {
+        try {
+            return openErrorlogs(); // Call the method to open the error logs
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null; // Return null if an exception occurs
+        }
+    }
+
+
+
+
+
+
 }
