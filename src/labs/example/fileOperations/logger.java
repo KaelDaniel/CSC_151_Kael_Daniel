@@ -23,9 +23,17 @@ public class logger {
     private static final String Http_Logger_File = File_Path + "logs\\http_access.log";
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        try (BufferedReader file4 = openHttpLog()) {
-            openErrorLog(file4);
-        }
+        BufferedReader errorLogReader = openErrorLog(); 
+        getCountOfErrorTypes(errorLogReader); 
+
+        BufferedReader memoryLimitReader = openErrorLog(); 
+        getMemoryLimitExceededCount(memoryLimitReader); 
+
+        BufferedReader diskSpaceReader = openErrorLog(); 
+        getDiskSpaceErrorsWithIPAddress(diskSpaceReader); 
+
+        BufferedReader apiErrorReader = openErrorLog(openHttpLog()); 
+        getGMOffset(apiErrorReader); 
     }
 
     public static BufferedReader openErrorLog() throws FileNotFoundException, IOException{
@@ -132,9 +140,23 @@ public class logger {
         }
     }
 
+    private static void getGMOffset(BufferedReader file) {
+        String error_line;
+        int positiveCount = 0; // Counter for +0000
+        int negativeCount = 0; // Counter for -0500
+        try {
+            while ((error_line = file.readLine()) != null) {
 
-
-
-
-
-}
+                if (error_line.contains("+0000")) { 
+                        positiveCount++; // Increment positive count
+                    } else if (error_line.contains("-0500")) {
+                        negativeCount++; // Increment negative count
+                    }
+                }
+            }catch (IOException e) {
+            e.printStackTrace();
+        }
+            System.out.println("Positive GMOffset count: " + positiveCount); // Print count of +0000
+            System.out.println("Negative GMOffset count: " + negativeCount); // Print count of -0500
+        } 
+    }
