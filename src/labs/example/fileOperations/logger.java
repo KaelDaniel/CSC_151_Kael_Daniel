@@ -100,20 +100,20 @@ public class logger {
 
     private static void getDiskSpaceErrorsWithIPAddress(BufferedReader file3){
         String error_Line;
-        int lineNumber = 0; // 
+        int lineNumber = 0; // Initialize line number counter
         boolean foundError = false; // Flag to check if any error is found
         try {
             while ((error_Line = file3.readLine()) != null) {
-                if (error_Line.contains("Disk space")) {
-                    String[] parts = error_Line.split("-");
-                    if (parts.length >= 2) {
-                        String ipAddress = parts[2].trim();
-                        String[] secondSplit = ipAddress.split(" ");
-                        System.out.println("disk space error on line " + lineNumber + " for IP Address: " + secondSplit[3]);
+                if (error_Line.contains("Disk space")) { // Check if the line contains "Disk space"
+                    String[] parts = error_Line.split("-"); // Split the line by the "-" character
+                    if (parts.length >= 2) { // Check if the split resulted in at least 2 parts
+                        String ipAddress = parts[2].trim(); // Get close to the IP address but requires a bit more cutting
+                        String[] secondSplit = ipAddress.split(" "); // Split the IP address part by spaces to isolate the IP address
+                        System.out.println("disk space error on line " + lineNumber + " for IP Address: " + secondSplit[3]); // end result is printed
                         foundError = true; // Set flag to true if an error is found
                     }    
                 }
-                lineNumber++;
+                lineNumber++; // and goes to the next line
             }
             if (!foundError) { // Print message if no errors were found
                 System.out.println("No disk space errors found.");
