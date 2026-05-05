@@ -34,6 +34,15 @@ public class logger {
 
         BufferedReader apiErrorReader = openErrorLog(openHttpLog()); 
         getGMOffset(apiErrorReader); 
+
+        BufferedReader gettingHTTPCodes = openHttpLog();
+        getHTTPCodes(gettingHTTPCodes);
+
+        BufferedReader gettingResponses = openHttpLog();
+        getResponseSize(gettingResponses);
+
+        BufferedReader groupingHTTPVerbs = openHttpLog();
+        groupHTTPMethodsAndEndPoints(groupingHTTPVerbs);
     }
 
     public static BufferedReader openErrorLog() throws FileNotFoundException, IOException{
@@ -131,13 +140,9 @@ public class logger {
         }
     }
 
-    private static BufferedReader openErrorLog(BufferedReader HTTP_Access) {
-        try {
-            return openErrorlogs(); // Call the method to open the error logs
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null; // Return null if an exception occurs
-        }
+    private static BufferedReader openErrorLog(BufferedReader HTTP_Access) throws FileNotFoundException {
+        File HTTP_Access1 = new File(Http_Logger_File); // creates a new file object with the path to the error log file
+        return new BufferedReader(new FileReader(HTTP_Access1)); //returns a buffered reader object that reads from the error log file
     }
 
     private static void getGMOffset(BufferedReader file) {
@@ -159,4 +164,72 @@ public class logger {
             System.out.println("Positive GMOffset count: " + positiveCount); // Print count of +0000
             System.out.println("Negative GMOffset count: " + negativeCount); // Print count of -0500
         } 
+    
+    private static void getHTTPCodes(BufferedReader file) {
+        String error_Line;
+        int count2xx = 0; 
+        int count3xx = 0; 
+        int count5xx = 0;
+        int totalLines = 0; // all of the counters for doing the checking, including a total line for double checking the math
+        try{
+            while ((error_Line = file.readLine()) != null){
+                totalLines++; // Increment total lines counter
+                if (error_Line.contains("\" 2")) {
+
+                    count2xx++; 
+                } else if (error_Line.contains("\" 3")) {
+
+                    count3xx++; 
+                } else if (error_Line.contains("\" 5")) { //the if and else if's check if it has the desired errors and adds them to a counter
+
+                    count5xx++; 
+                }
+            }
+            System.out.println("2xx Errors: " + count2xx);
+            
+            System.out.println("3xx Errors: " + count3xx);
+            
+            System.out.println("5xx Errors: " + count5xx);
+
+            System.out.println("Total lines read: " + totalLines); // added this to double check if the math was right, and it was
+        }        catch (IOException e) {
+            e.printStackTrace(); //very simalar to the last one
+        }
     }
+
+    static void getResponseSize(BufferedReader file){
+        String error_Line;
+        int linesUnder3900 = 0; // Counter for response sizes under 3900
+        try{
+            while ((error_Line = file.readLine()) != null){
+                String[] yeetparts = error_Line.split(" ");
+                int value = Integer.parseInt(yeetparts[9]);
+                if (value < 3900) {
+                    linesUnder3900++;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Lines with response size under 3900: " + linesUnder3900);
+    }
+
+    static void groupHTTPMethodsAndEndPoints(BufferedReader file){
+        String error_Line;
+        Set<String> verbs = new HashSet<>(); // Set to store unique HTTP methods
+        
+        try{
+            while ((error_Line = file.readLine()) != null){
+                String[] parts = error_Line.split(" "); // Split the line by spaces to isolate the HTTP method and endpoint
+                verbs.add(parts[5]); // adds the HTTP method to the set
+            }
+            System.err.println("HTTP Methods and Endpoints:");
+            for (String verb : verbs) {
+                System.err.println(verb + "\""); // Print out the verb, and with the " it makes it look nicer
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
