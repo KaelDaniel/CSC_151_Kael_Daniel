@@ -1,66 +1,87 @@
 package labs.example.chatbot;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-
 public class chatBot {
+
+    // IMPORTANT: Replace this with your actual API key
+    private static final String API_KEY = "AIzaSyCH1MAm_ir1-xOjS1knMnZ3jHjP2Bo1uOA";
+    private static final String MODEL = "gemini-3-flash-preview";
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Welcome to the ChatBot! Type 'exit' to quit.");
-        
+        System.out.println("--- Gemini AI Chatbot (Java) ---");
+        System.out.println("Type your message (or 'exit' to quit):");
+
         while (true) {
-            System.out.print("You: ");
+            System.out.print("\nYou: ");
             String userInput = scanner.nextLine();
-            
+
             if (userInput.equalsIgnoreCase("exit")) {
-                System.out.println("Goodbye!");
                 break;
             }
-            
-            String response = getChatBotResponse(userInput);
-            System.out.println("ChatBot: " + response);
+
+            try {
+                String response = callGemini(userInput);
+                System.out.println("AI: " + response);
+            } catch (Exception e) {
+                System.err.println("Error calling AI: " + e.getMessage());
+            }
         }
-                
         scanner.close();
     }
-            
-    public static String getChatBotResponse(String userInput) {
-        try {
-            URL url = new URL("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=YOUR_API_KEY");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json; utf-8");
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setDoOutput(true);
 
-            String jsonInputString = "{\"input\": \"" + userInput + "\"}";
+    public static String callGemini(String prompt) throws Exception {
+        // 1. Construct the URI and URL
+        String urlString = "https://generativelanguage.googleapis.com/v1beta/models/" 
+                         + MODEL + ":generateContent?key=" + API_KEY;
+        URI uri = new URI(urlString);
+        URL url = uri.toURL();
 
-            try (OutputStream os = connection.getOutputStream()) {
-                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }
+        // 2. Open Connection
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setDoOutput(true);
 
+        // 3. Create JSON Payload
+        // Note: For production, use a library like Jackson or Gson for JSON
+        String jsonInputString = "{\"contents\": [{\"parts\": [{\"text\": \"" + prompt + "\"}]}]}";
+
+        // 4. Send Request
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = jsonInputString.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+
+        // 5. Read Response
+        int responseCode = conn.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
             try (BufferedReader br = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+                    new InputStreamReader(conn.getInputStream(), "utf-8"))) {
                 StringBuilder response = new StringBuilder();
                 String responseLine;
+                
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-                return response.toString();
+                
+                // Parse the response to extract the chatbot's response text
+                String[] responseLines = response.toString().split("\"text\":");
+                if (responseLines.length > 1) {
+                    String[] finalResponseForm = responseLines[1].split(",\"");
+                    return finalResponseForm[0].trim();
+                } else {
+                    throw new RuntimeException("Unexpected response format from AI.");
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "Error: Unable to get response from ChatBot.";
+        } else {
+            throw new RuntimeException("HTTP Status: " + responseCode);
         }
-    }        
+    }
 }
